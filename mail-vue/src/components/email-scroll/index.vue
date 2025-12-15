@@ -447,13 +447,16 @@ function addItem(email) {
   if (props.timeSort) {
     if (noLoading.value) {
       emailList.push(email)
-      latestEmail.value = email
-      total.value++
-    } else {
-      total.value++
     }
+
+    if (email.emailId > latestEmail.value.emailId) {
+      latestEmail.value = email
+    }
+
+    total.value++
     return;
   }
+
 
   const index = emailList.findIndex(item => item.emailId < email.emailId)
 
@@ -463,6 +466,10 @@ function addItem(email) {
     if (noLoading.value) {
       emailList.push(email)
     }
+  }
+
+  if (email.emailId > latestEmail.value.emailId) {
+    latestEmail.value = email
   }
 
   total.value++
@@ -489,6 +496,8 @@ function updateCheckStatus() {
 }
 
 function jumpDetails(email) {
+  const sel = window.getSelection();
+  if (sel && !sel.isCollapsed) return;
   emit('jump', email)
 }
 
@@ -900,7 +909,7 @@ function loadData() {
 
 .header-actions {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 15px;
   padding: 3px 15px;
